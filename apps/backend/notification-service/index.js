@@ -26,6 +26,7 @@ const run = async () => {
         console.log('Kafka Consumer Connected');
 
         await consumer.subscribe({ topic: 'booking-events', fromBeginning: true });
+        await consumer.subscribe({ topic: 'auth-events', fromBeginning: true });
 
         await consumer.run({
             eachMessage: async ({ topic, partition, message }) => {
@@ -40,6 +41,17 @@ const run = async () => {
                         // Simulate email sending delay
                         await new Promise(resolve => setTimeout(resolve, 500));
                         console.log('✅ Email Sent Successfully');
+                    } else if (data.event === 'USER_REGISTERED') {
+                        const { user } = data;
+                        if (user.verificationMethod === 'email') {
+                            console.log(`📧 [NOTIFICATION] Sending verification EMAIL to ${user.email}`);
+                            console.log(`💬 Code: ${user.verificationCode}`);
+                        } else {
+                            console.log(`📱 [NOTIFICATION] Sending verification SMS to ${user.phone}`);
+                            console.log(`💬 Code: ${user.verificationCode}`);
+                        }
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        console.log('✅ Verification Message "Sent"');
                     }
                 } catch (e) {
                     console.error('Error processing message:', e);

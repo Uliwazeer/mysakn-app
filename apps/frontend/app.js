@@ -346,6 +346,8 @@ function handleSignup(e) {
             role: selectedRole || 'student',
             gender: genderEl ? genderEl.value : 'male',
             paymentMethod: paymentEl ? paymentEl.value : 'visa',
+            phone: getVal('signupPhone'),
+            verificationMethod: getVal('signupVerificationMethod') || 'email',
             createdAt: new Date().toISOString()
         };
 
@@ -388,9 +390,19 @@ function handleSignup(e) {
                 console.error('🌩️ DB ERROR:', result.error);
                 alert("Signup Failed: " + result.error);
             } else {
-                console.log('✅ SIGNUP SUCCESS:', result.user);
-                alert(`Welcome ${userData.name}! Your account is ready.`);
-                window.location.reload();
+                console.log('✅ SIGNUP INITIALIZED:', result);
+                // Switch to Verification Modal
+                toggleModal('signupModal');
+
+                // Store email for verification step
+                window.pendingEmail = userData.email;
+
+                const targetDisplay = document.getElementById('verifyTargetDisplay');
+                if (targetDisplay) {
+                    targetDisplay.textContent = userData.verificationMethod === 'email' ? userData.email : userData.phone;
+                }
+
+                setTimeout(() => toggleModal('verifyModal'), 300);
             }
         }).catch(err => {
             console.error('🔥 CRITICAL FETCH ERROR:', err);
@@ -420,6 +432,29 @@ async function testConnection(btn) {
         statusEl.innerHTML = '<span style="color:green">Online ✅</span>';
     } else {
         statusEl.innerHTML = '<span style="color:red">Offline ❌</span>';
+    }
+}
+
+async function handleVerify(e) {
+    if (e) e.preventDefault();
+    const code = document.getElementById('verificationCodeInput').value;
+    const email = window.pendingEmail;
+
+    if (!email) {
+        alert("Session expired. Please sign up again.");
+        window.location.reload();
+        return;
+    }
+
+    console.log(`🔐 Verifying code ${code} for ${email}...`);
+
+    const result = await db.verifyCode(email, code);
+
+    if (result.success) {
+        alert("Identity Verified! Welcome to MySakn.");
+        window.location.reload();
+    } else {
+        alert("Verification failed: " + result.error);
     }
 }
 function handleLogin(e) {

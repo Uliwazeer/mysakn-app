@@ -4,6 +4,13 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
+const { Kafka } = require('kafkajs');
+
+const kafka = new Kafka({
+    clientId: 'auth-service',
+    brokers: [process.env.KAFKA_BROKER || 'kafka:9092']
+});
+const producer = kafka.producer();
 
 const app = express();
 app.use(express.json());
@@ -14,6 +21,8 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://mongodb:27017/auth-db';
 mongoose.connect(MONGO_URI)
     .then(async () => {
         console.log('AuthDB Connected');
+        await producer.connect();
+        console.log('Kafka Producer Connected');
         // Wipe users on startup for clean state (as requested)
         try {
             await User.deleteMany({});
@@ -41,6 +50,10 @@ const UserSchema = new mongoose.Schema({
     paymentMethod: String,
     roleInfo1: String, // Dynamic field based on role (Address/Agency)
     roleInfo2: String, // Dynamic field based on role (District)
+    phone: String,
+    isVerified: { type: Boolean, default: false },
+    verificationCode: String,
+    verificationMethod: { type: String, enum: ['phone', 'email'], default: 'email' },
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -64,23 +77,53 @@ app.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Generate 6-digit code
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        const verificationMethod = req.body.verificationMethod || 'email';
+
         const user = new User({
             name,
             email,
             password: hashedPassword,
             role,
+            phone: req.body.phone,
+            verificationCode: code,
+            verificationMethod,
+            isVerified: false,
             ...extraFields
         });
 
         console.log('💾 [AUTH] Saving user to MongoDB...');
         await user.save();
-        console.log('✅ [AUTH] User saved successfully:', email);
+        console.log('✅ [AUTH] User saved. Verification Code:', code);
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
+        // Emit Kafka event for notification-service
+        try {
+            await producer.send({
+                topic: 'auth-events',
+                messages: [{
+                    value: JSON.stringify({
+                        event: 'USER_REGISTERED',
+                        user: {
+                            email: user.email,
+                            phone: user.phone,
+                            name: user.name,
+                            verificationCode: code,
+                            verificationMethod: user.verificationMethod
+                        }
+                    })
+                }]
+            });
+            console.log('📡 [AUTH] USER_REGISTERED event sent to Kafka');
+        } catch (kafkaErr) {
+            console.error('❌ [AUTH] Kafka Error:', kafkaErr.message);
+        }
+
         res.status(201).json({
-            msg: 'User registered',
-            token,
-            user: { id: user._id, name, email, role }
+            msg: 'User registered. Please verify your account.',
+            email: user.email,
+            verificationMethod: user.verificationMethod
         });
     } catch (err) {
         console.error('Registration Error:', err);
@@ -99,6 +142,33 @@ app.post('/login', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
         res.json({ msg: 'Login success', token, user: { id: user._id, name: user.name, email, role: user.role } });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/verify', async (req, res) => {
+    try {
+        const { email, code } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (user.isVerified) return res.status(400).json({ error: 'User already verified' });
+
+        if (user.verificationCode !== code) {
+            return res.status(400).json({ error: 'Invalid verification code' });
+        }
+
+        user.isVerified = true;
+        user.verificationCode = undefined; // Clear code
+        await user.save();
+
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
+        res.json({
+            msg: 'Verification successful',
+            token,
+            user: { id: user._id, name: user.name, email: user.email, role: user.role }
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

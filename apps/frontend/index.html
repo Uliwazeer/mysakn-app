@@ -786,6 +786,19 @@
                     <label>Password</label>
                     <input type="password" id="signupPass" placeholder="Create a password" required>
                 </div>
+                <div class="row-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="signupPhone" placeholder="01xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Verify Via</label>
+                        <select id="signupVerificationMethod" required>
+                            <option value="email">Email</option>
+                            <option value="phone">Phone (SMS)</option>
+                        </select>
+                    </div>
+                </div>
                 <div id="roleSpecificFields">
                     <!-- Dynamic Fields Injected Here -->
                 </div>

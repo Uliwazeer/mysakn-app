@@ -139,6 +139,27 @@ const db = {
             console.error('Booking Service Error', err);
             return booking;
         }
+    },
+
+    verifyCode: async (email, code) => {
+        try {
+            const res = await fetch(`${API_URLS.AUTH}/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem(DB_KEYS.CURRENT_USER, data.token);
+                localStorage.setItem(DB_KEYS.USER_DATA, JSON.stringify(data.user));
+                return { success: true, user: data.user };
+            }
+            return { error: data.error || 'Verification failed' };
+        } catch (err) {
+            console.error('Verification Error', err);
+            return { error: 'Network Error' };
+        }
     }
 };
 

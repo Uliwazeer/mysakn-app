@@ -29,7 +29,9 @@ MySakn follows a robust **5-Tier Architecture** ensuring scalability, security, 
 4.  **Tier 4: Integration Tier (Event Bus)**
     *   **Technology**: Apache Kafka.
     *   **Role**: Asynchronous communication.
-    *   **Flow**: `Booking Created` -> Kafka -> `Notification Service` -> Email/Alert.
+    *   **Flows**: 
+        *   `Booking Created` -> Kafka -> `Notification Service` -> Email/Alert.
+        *   `User Registered` -> Kafka -> `Notification Service` -> Verification Code (SMS/Email).
 
 5.  **Tier 5: Data Persistence Tier (Database)**
     *   **Technology**: MongoDB.
