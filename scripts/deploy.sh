@@ -88,7 +88,12 @@ run_diagnostics() {
     echo -e "\n${GREEN}✅ Diagnostics Complete.${NC}"
     read -p "Press Enter to return to menu..."
 }
-
+fast_rebuild() {
+    print_step_header "⚡ Fast Service Rebuild"
+    echo "Which service would you like to rebuild?"
+    echo "1) Frontend (Gateway & UI)"
+    echo "2) Auth Service (Security & Users)"
+    echo "3) Housing Service (Listings)"
     echo "4) Booking Service (Transactions)"
     echo "5) Notification Service (Events)"
     echo "6) Kafka Infrastructure (Cluster & UI)"
