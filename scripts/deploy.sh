@@ -59,6 +59,101 @@ echo ""
 sleep 1
 
 # ==============================================================================
+# 🛠️ Helper Functions
+# ==============================================================================
+
+run_diagnostics() {
+    print_step_header "🔍 MySakn System Diagnostics"
+    NAMESPACE="mysakn-app"
+    
+    echo -e "${YELLOW}[1/4] Checking Pod Status...${NC}"
+    kubectl get pods -n $NAMESPACE
+    
+    echo -e "\n${YELLOW}[2/4] Checking Frontend Logs...${NC}"
+    kubectl logs -n $NAMESPACE -l app=frontend --tail=20
+    
+    echo -e "\n${YELLOW}[3/4] Checking Auth Service Logs...${NC}"
+    kubectl logs -n $NAMESPACE -l app=auth-service --tail=20
+    
+    echo -e "\n${YELLOW}[4/4] Checking MongoDB Data...${NC}"
+    MONGO_POD=$(kubectl get pods -n $NAMESPACE -l app=mongodb -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+    if [ ! -z "$MONGO_POD" ]; then
+        echo "Collections in auth-db:"
+        kubectl exec -n $NAMESPACE $MONGO_POD -- mongo auth-db --eval "db.getCollectionNames();" --quiet
+        echo "User count:"
+        kubectl exec -n $NAMESPACE $MONGO_POD -- mongo auth-db --eval "db.users.count();" --quiet
+    else
+        echo -e "${RED}❌ MongoDB pod not found.${NC}"
+    fi
+    echo -e "\n${GREEN}✅ Diagnostics Complete.${NC}"
+    read -p "Press Enter to return to menu..."
+}
+
+fast_rebuild() {
+    print_step_header "⚡ Fast Service Rebuild"
+    echo "Which service would you like to rebuild?"
+    echo "1) Frontend (Gateway & UI)"
+    echo "2) Auth Service (Security & Users)"
+    echo "3) Housing Service (Listings)"
+    echo "4) Booking Service (Transactions)"
+    echo "5) Notification Service (Events)"
+    echo "6) ← Back to Main Menu"
+    echo ""
+    read -p "Enter choice [1-6]: " rb_choice
+
+    case $rb_choice in
+        1) S_NAME="mysakn-frontend"; S_PATH="apps/frontend" ;;
+        2) S_NAME="auth-service"; S_PATH="apps/backend/auth-service" ;;
+        3) S_NAME="housing-service"; S_PATH="apps/backend/housing-service" ;;
+        4) S_NAME="booking-service"; S_PATH="apps/backend/booking-service" ;;
+        5) S_NAME="notification-service"; S_PATH="apps/backend/notification-service" ;;
+        *) return ;;
+    esac
+
+    echo -e "${YELLOW}🔄 Updating $S_NAME...${NC}"
+    eval $(minikube docker-env)
+    docker rmi -f $S_NAME:latest 2>/dev/null || true
+    minikube image build -t $S_NAME:latest $S_PATH
+    
+    echo -e "${YELLOW}♻️  Rolling out new version...${NC}"
+    kubectl rollout restart deployment $S_NAME -n mysakn-app
+    
+    echo -e "${GREEN}✅ $S_NAME is now up to date!${NC}"
+    read -p "Press Enter to return to menu..."
+}
+
+# ==============================================================================
+# 🎮 Main Control Loop
+# ==============================================================================
+
+while true; do
+    clear
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║${BOLD}                        🏠 MySakn Command Center                          ${NC}${CYAN}║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${BOLD}Select an action:${NC}"
+    echo -e "1) ${GREEN}Full Deployment${NC} (Deploy the entire platform)"
+    echo -e "2) ${YELLOW}Fast Rebuild${NC}    (Update a specific service only)"
+    echo -e "3) ${MAGENTA}Diagnostics${NC}     (Check logs and database status)"
+    echo -e "4) ${RED}Exit${NC}"
+    echo ""
+    read -p "Enter choice [1-4]: " main_choice
+
+    case $main_choice in
+        1) break ;; # Continue to full deployment logic
+        2) fast_rebuild ;;
+        3) run_diagnostics ;;
+        4) exit 0 ;;
+        *) echo -e "${RED}Invalid choice!${NC}"; sleep 1 ;;
+    esac
+done
+
+# ==============================================================================
+# 🚀 Full Deployment Logic (Starts Here)
+# ==============================================================================
+
+# ==============================================================================
 # Step 1: Deployment Options
 # ==============================================================================
 print_step_header "Step 1: Deployment Options & Environment Setup"
@@ -244,9 +339,10 @@ echo -e "   ${YELLOW}🌐 Frontend Application:${NC}"
 echo -e "      http://${MINIKUBE_IP}:30080"
 echo ""
 echo -e "   ${YELLOW}🔧 Backend Services:${NC}"
-echo -e "      • Auth Service:    http://${MINIKUBE_IP}:30001"
-echo -e "      • Housing Service: http://${MINIKUBE_IP}:30002"
-echo -e "      • Booking Service: http://${MINIKUBE_IP}:30003"
+echo -e "      • Auth Service:         http://${MINIKUBE_IP}:30001"
+echo -e "      • Housing Service:      http://${MINIKUBE_IP}:30002"
+echo -e "      • Booking Service:      http://${MINIKUBE_IP}:30003"
+echo -e "      • Notification Service: http://${MINIKUBE_IP}:30004"
 echo ""
 echo -e "   ${YELLOW}📊 Monitoring & Tools:${NC}"
 echo -e "      • Kafka UI:        http://${MINIKUBE_IP}:30090"
@@ -256,13 +352,18 @@ echo ""
 echo -e "   ${GREEN}•${NC} Check pods:     ${YELLOW}kubectl get pods -n mysakn-app${NC}"
 echo -e "   ${GREEN}•${NC} View logs:      ${YELLOW}kubectl logs -f <pod-name> -n mysakn-app${NC}"
 echo -e "   ${GREEN}•${NC} Install tools:  ${YELLOW}./scripts/tools.sh${NC}"
+echo -e "   ${GREEN}•${NC} Cleanup Local:  ${RED}kubectl delete namespace mysakn-app${NC}"
+echo -e "   ${GREEN}•${NC} Cleanup Cloud:  ${RED}cd infra/terraform && terraform destroy --auto-approve${NC}"
 echo ""
 echo -e "${MAGENTA}${BOLD}💡 Platform Features & DevSecOps Standards:${NC}"
-echo -e "   ✓ High-Availability Microservices Architecture"
-echo -e "   ✓ CI/CD Ready Infrastructure with K8s"
-echo -e "   ✓ Real-time Event Streaming via Kafka"
-echo -e "   ✓ Persistent MongoDB Data Layer"
-echo -e "   ✓ Automated Security Checks & Health Monitoring"
+echo -e "   ✓ 5-Tier Decoupled Microservices Architecture"
+echo -e "   ✓ Hybrid Cloud Support (AWS EKS & Local Minikube)"
+echo -e "   ✓ GitOps & CI/CD Ready Infrastructure with K8s"
+echo -e "   ✓ Real-time Event Streaming via Kafka Cluster"
+echo -e "   ✓ Centralized Logging (ELK) & Monitoring (Prometheus)"
+echo -e "   ✓ Secure API Gateway & Path-based Routing (Nginx)"
+echo -e "   ✓ Persistent NoSQL Data Layer with MongoDB"
+echo -e "   ✓ Automated Health Checks (Liveness/Readiness Probes)"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BOLD}Platform Created by: ${YELLOW}Ali Wazeer${NC}${BOLD} | DevSecOps Engineer${NC}"

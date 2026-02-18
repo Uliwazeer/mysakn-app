@@ -928,19 +928,20 @@
                 <p id="bookingListingName">Listing Name</p>
             </div>
             <form class="booking-form" onsubmit="event.preventDefault(); handleBookingSubmit();">
-                <div class="form-group">
-                    <label>Preferred Visit Date</label>
-                    <input type="date" id="visitDate" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Preferred Time</label>
-                    <select id="visitTime" required>
-                        <option value="">Select time</option>
-                        <option value="morning">Morning (9 AM - 12 PM)</option>
-                        <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
-                        <option value="evening">Evening (4 PM - 7 PM)</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Visit Date</label>
+                        <input type="date" id="visitDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Time</label>
+                        <select id="visitTime" required>
+                            <option value="">Select time</option>
+                            <option value="morning">Morning (9 AM - 12 PM)</option>
+                            <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                            <option value="evening">Evening (4 PM - 7 PM)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -948,37 +949,88 @@
                     <input type="date" id="moveInDate" required>
                 </div>
 
-                <div class="form-group">
-                    <label>Number of Residents</label>
-                    <select id="residentCount" required>
-                        <option value="1">1 Person</option>
-                        <option value="2">2 Persons</option>
-                        <option value="3">3 Persons</option>
-                        <option value="4">4 Persons</option>
-                        <option value="5">5 Persons</option>
-                        <option value="6+">6+ Persons</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Housing Type</label>
+                        <select id="housingType" required onchange="updateBookingPrice()">
+                            <option value="shared">Shared Room</option>
+                            <option value="private">Private Room (+200)</option>
+                            <option value="studio">Entire Studio (+500)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Residents</label>
+                        <select id="residentCount" required>
+                            <option value="1">1 Person</option>
+                            <option value="2">2 Persons</option>
+                            <option value="3">3 Persons</option>
+                            <option value="4">4 Persons</option>
+                        </select>
+                    </div>
                 </div>
 
-
-
-                <div class="price-summary-box">
-                    <div class="price-row">
-                        <span>Viewing Deposit</span>
-                        <span id="depositAmount">400 EGP</span>
+                <div class="form-group" style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                    <label>Payment Plan</label>
+                    <div class="payment-plan-options" style="display: flex; gap: 10px; margin-top: 5px;">
+                        <label
+                            style="flex: 1; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center;">
+                            <input type="radio" name="paymentPlan" value="deposit" checked
+                                onchange="updateBookingPrice()">
+                            <div style="font-size: 13px; font-weight: 700;">Deposit Only</div>
+                            <small style="color: gray; font-size: 10px;">Secure your spot</small>
+                        </label>
+                        <label
+                            style="flex: 1; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center;">
+                            <input type="radio" name="paymentPlan" value="full" onchange="updateBookingPrice()">
+                            <div style="font-size: 13px; font-weight: 700;">Full Month</div>
+                            <small style="color: gray; font-size: 10px;">Pay upfront</small>
+                        </label>
                     </div>
-                    <div class="divider"></div>
-                    <div class="price-row total">
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Payment Method</label>
+                    <div class="payment-options"
+                        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+                        <label class="payment-option">
+                            <input type="radio" name="bookingPayment" value="visa" checked>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa"
+                                style="height: 12px;">
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="bookingPayment" value="mastercard">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg"
+                                alt="Mastercard" style="height: 18px;">
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="bookingPayment" value="vodafone">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Vodafone_logo.svg"
+                                alt="Vodafone" style="height: 18px;">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="price-summary-box"
+                    style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-top: 15px;">
+                    <div class="price-row"
+                        style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px;">
+                        <span>Base Price</span>
+                        <span id="basePriceAmount">0 EGP</span>
+                    </div>
+                    <div class="price-row"
+                        style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px;">
+                        <span>Housing Extra</span>
+                        <span id="housingExtraAmount">0 EGP</span>
+                    </div>
+                    <div class="divider" style="height: 1px; background: #e2e8f0; margin: 10px 0;"></div>
+                    <div class="price-row total"
+                        style="display: flex; justify-content: space-between; font-weight: 800; color: #1e293b;">
                         <span>Total Due Now</span>
-                        <span id="bookingTotalPrice">400 EGP</span>
+                        <span id="bookingTotalPrice">0 EGP</span>
                     </div>
-                    <p class="cancellation-policy"><i class="material-icons-round" style="font-size:12px">schedule</i>
-                        We'll contact you within 12-24 hours to confirm your visit.</p>
                 </div>
 
-                <button type="submit" class="btn-primary full-width">Reserve Visit</button>
-                <button type="button" class="btn-text full-width" onclick="cancelReservation()"
-                    style="margin-top: 10px;">Cancel Reservation</button>
+                <button type="submit" class="btn-primary full-width" style="margin-top: 15px;">Confirm & Pay</button>
             </form>
         </div>
     </div>

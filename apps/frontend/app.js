@@ -469,47 +469,44 @@ function openBookingModal(listingName, basePrice) {
     currentBooking.basePrice = basePrice;
 
     document.getElementById('bookingListingName').textContent = listingName;
-    document.getElementById('housingTypeSelect').value = 'shared'; // Reset
-    document.getElementById('paymentPlanSelect').value = 'month'; // Reset
+    document.getElementById('housingType').value = 'shared'; // Reset
+    document.querySelector('input[name="paymentPlan"][value="deposit"]').checked = true; // Reset
 
     updateBookingPrice();
     toggleModal('bookingModal');
 }
 
 function updateBookingPrice() {
-    const type = document.getElementById('housingTypeSelect').value;
-    const plan = document.getElementById('paymentPlanSelect').value;
+    const type = document.getElementById('housingType').value;
+    const plan = document.querySelector('input[name="paymentPlan"]:checked').value;
 
-    let multiplier = 1;
-    if (type === 'private') multiplier = 1.5;
-    else if (type === 'studio') multiplier = 2.0;
+    let extra = 0;
+    if (type === 'private') extra = 200;
+    else if (type === 'studio') extra = 500;
 
-    const baseRent = currentBooking.basePrice * multiplier;
-    const serviceFee = baseRent * 0.05; // 5% Service Fee
-    let deposit = baseRent; // 1 Month Deposit
+    const basePrice = currentBooking.basePrice;
 
-    if (plan === 'deposit') {
-        // If Paying Deposit Only
-        document.getElementById('billBaseRent').textContent = "0 EGP (Pay Later)";
-        document.getElementById('billServiceFee').textContent = Math.round(serviceFee).toLocaleString() + ' EGP';
-        document.getElementById('billDeposit').textContent = Math.round(deposit).toLocaleString() + ' EGP';
-        document.getElementById('bookingTotalPrice').textContent = Math.round(serviceFee + deposit).toLocaleString() + ' EGP';
+    document.getElementById('basePriceAmount').textContent = basePrice.toLocaleString() + ' EGP';
+    document.getElementById('housingExtraAmount').textContent = extra.toLocaleString() + ' EGP';
+
+    let total = 0;
+    if (plan === 'full') {
+        total = basePrice + extra;
     } else {
-        // Default: 1st Month + Fees + Deposit
-        document.getElementById('billBaseRent').textContent = Math.round(baseRent).toLocaleString() + ' EGP';
-        document.getElementById('billServiceFee').textContent = Math.round(serviceFee).toLocaleString() + ' EGP';
-        document.getElementById('billDeposit').textContent = Math.round(deposit).toLocaleString() + ' EGP';
-        const total = baseRent + serviceFee + deposit;
-        document.getElementById('bookingTotalPrice').textContent = Math.round(total).toLocaleString() + ' EGP';
+        total = 400; // Standard Viewing Deposit
     }
+
+    document.getElementById('bookingTotalPrice').textContent = Math.round(total).toLocaleString() + ' EGP';
 }
 
 function handleBookingSubmit() {
     const visitDate = document.getElementById('visitDate').value;
     const visitTime = document.getElementById('visitTime').value;
     const moveInDate = document.getElementById('moveInDate').value;
+    const housingType = document.getElementById('housingType').value;
     const residentCount = document.getElementById('residentCount').value;
-    const payment = document.querySelector('input[name="payment"]:checked').value;
+    const paymentPlan = document.querySelector('input[name="paymentPlan"]:checked').value;
+    const paymentMethod = document.querySelector('input[name="bookingPayment"]:checked').value;
     const totalRaw = document.getElementById('bookingTotalPrice').textContent;
     const price = parseFloat(totalRaw.replace(/[^0-9.]/g, ''));
 
@@ -526,18 +523,20 @@ function handleBookingSubmit() {
         visitDate,
         visitTime,
         moveInDate,
+        housingType,
         residentCount,
-        paymentMethod: payment,
+        paymentPlan,
+        paymentMethod,
         status: 'pending',
         date: new Date().toISOString(),
-        customerEmail: currentUser.email,
-        paid: payment === 'vodafone' ? (price * 0.1) : 0, // Mock: 10% paid if vodafone
+        customerEmail: currentUser.email
     };
 
     db.saveBooking(bookingData).then(() => {
         alert(`Reservation Request Sent!\n` +
             `Listing: ${currentBooking.listingName}\n` +
-            `Amount: ${totalRaw}\n` +
+            `Total Due Now: ${totalRaw}\n` +
+            `Type: ${housingType.toUpperCase()}\n` +
             `Status: Pending Approval\n\n` +
             `The host will review your request and contact you shortly.`);
 

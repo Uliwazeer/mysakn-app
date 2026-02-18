@@ -63,6 +63,8 @@ app.get('/listings/:id', async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => res.json({ message: "Housing Service is running", health: "/health" }));
+
 app.get('/health', (req, res) => res.json({ status: 'Housing Service OK' }));
 
 const PORT = 3002;

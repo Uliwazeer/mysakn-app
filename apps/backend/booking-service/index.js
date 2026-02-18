@@ -76,6 +76,8 @@ app.get('/bookings', async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => res.json({ message: "Booking Service is running", health: "/health" }));
+
 app.get('/health', (req, res) => res.json({ status: 'Booking Service OK' }));
 
 const PORT = 3003;

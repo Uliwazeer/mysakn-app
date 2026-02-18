@@ -13,6 +13,8 @@ const app = express();
 app.use(express.json());
 
 // Routes
+app.get('/', (req, res) => res.json({ message: "Notification Service is running", health: "/health" }));
+
 app.get('/health', (req, res) => res.json({ status: 'Notification Service OK' }));
 
 const PORT = 3004;

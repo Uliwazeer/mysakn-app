@@ -1113,13 +1113,13 @@
             setTimeout(() => {
                 let response = "I'm not sure about that. Let me connect you to a human agent, or try asking about 'available rooms', 'verification', or 'booking process'.";
 
-                if (text.includes('available') || text.includes('rooms') || text.includes('غرف')) {
+                if (text.includes('available') || text.includes('rooms')) {
                     response = "You can check all available rooms on the 'Exploration' page. Use the filters to find exactly what you need!";
-                } else if (text.includes('verify') || text.includes('id') || text.includes('تحقق')) {
+                } else if (text.includes('verify') || text.includes('id')) {
                     response = "To verify your account, upload your ID and University ID in the Settings -> Documents section.";
                     db.updateChecklist(currentUser.email, 'docs', true);
                     renderChecklist();
-                } else if (text.includes('price') || text.includes('egp') || text.includes('سعر')) {
+                } else if (text.includes('price') || text.includes('egp')) {
                     response = "Room prices vary by location, but the average student room in Dokki is around 2000-3000 EGP per month.";
                 }
 
