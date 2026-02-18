@@ -89,24 +89,25 @@ run_diagnostics() {
     read -p "Press Enter to return to menu..."
 }
 
-fast_rebuild() {
-    print_step_header "⚡ Fast Service Rebuild"
-    echo "Which service would you like to rebuild?"
-    echo "1) Frontend (Gateway & UI)"
-    echo "2) Auth Service (Security & Users)"
-    echo "3) Housing Service (Listings)"
     echo "4) Booking Service (Transactions)"
     echo "5) Notification Service (Events)"
-    echo "6) ← Back to Main Menu"
+    echo "6) Kafka Infrastructure (Cluster & UI)"
+    echo "7) ← Back to Main Menu"
     echo ""
-    read -p "Enter choice [1-6]: " rb_choice
+    read -p "Enter choice [1-7]: " rb_choice
 
     case $rb_choice in
-        1) S_NAME="mysakn-frontend"; S_PATH="apps/frontend" ;;
-        2) S_NAME="auth-service"; S_PATH="apps/backend/auth-service" ;;
-        3) S_NAME="housing-service"; S_PATH="apps/backend/housing-service" ;;
-        4) S_NAME="booking-service"; S_PATH="apps/backend/booking-service" ;;
-        5) S_NAME="notification-service"; S_PATH="apps/backend/notification-service" ;;
+        1) S_NAME="mysakn-frontend"; S_PATH="apps/frontend"; S_URL="http://$(minikube ip):30080" ;;
+        2) S_NAME="auth-service"; S_PATH="apps/backend/auth-service"; S_URL="http://$(minikube ip):30001" ;;
+        3) S_NAME="housing-service"; S_PATH="apps/backend/housing-service"; S_URL="http://$(minikube ip):30002" ;;
+        4) S_NAME="booking-service"; S_PATH="apps/backend/booking-service"; S_URL="http://$(minikube ip):30003" ;;
+        5) S_NAME="notification-service"; S_PATH="apps/backend/notification-service"; S_URL="http://$(minikube ip):30004" ;;
+        6) 
+            echo -e "${YELLOW}♻️  Restarting Kafka Infrastructure...${NC}"
+            kubectl rollout restart deployment kafka-kraft kafka-ui -n mysakn-app
+            verify_service "kafka-ui" "http://$(minikube ip):30090"
+            return
+            ;;
         *) return ;;
     esac
 
@@ -119,6 +120,37 @@ fast_rebuild() {
     kubectl rollout restart deployment $S_NAME -n mysakn-app
     
     echo -e "${GREEN}✅ $S_NAME is now up to date!${NC}"
+    verify_service "$S_NAME" "$S_URL"
+}
+
+verify_service() {
+    SERVICE=$1
+    URL=$2
+    echo ""
+    read -p "❓ Would you like to verify $SERVICE status now? (y/n): " verify_choice
+    if [[ "$verify_choice" =~ ^[Yy](es)?$ ]]; then
+        echo -e "\n${CYAN}📊 Current Status for $SERVICE:${NC}"
+        kubectl get pods -n mysakn-app -l app=$SERVICE
+        echo -e "\n${CYAN}📜 Last 10 lines of logs:${NC}"
+        kubectl logs -n mysakn-app -l app=$SERVICE --tail=10
+        echo -e "\n${YELLOW}🌐 Browser Access:${NC}"
+        echo -e "   $URL"
+        echo ""
+        read -p "Press Enter to continue..."
+    fi
+}
+
+show_resource_monitor() {
+    print_step_header "📊 Platform Resource Monitor"
+    echo -e "${BOLD}Current Resource Usage (mysakn-app namespace):${NC}"
+    echo "----------------------------------------------------------------"
+    if command -v kubectl top pod &> /dev/null; then
+        kubectl top pod -n mysakn-app
+    else
+        echo -e "${YELLOW}Note: Metrics Server not enabled. Showing basic pod status instead.${NC}"
+        kubectl get pods -n mysakn-app -o wide
+    fi
+    echo "----------------------------------------------------------------"
     read -p "Press Enter to return to menu..."
 }
 
@@ -150,15 +182,17 @@ while true; do
     echo -e "1) ${GREEN}Full Deployment${NC} (Deploy the entire platform)"
     echo -e "2) ${YELLOW}Fast Rebuild${NC}    (Update a specific service only)"
     echo -e "3) ${MAGENTA}Diagnostics${NC}     (Check logs and database status)"
-    echo -e "4) ${RED}Exit${NC}"
+    echo -e "4) ${CYAN}Resource Monitor${NC}(CPU/RAM usage & Pod stats)"
+    echo -e "5) ${RED}Exit${NC}"
     echo ""
-    read -p "Enter choice [1-4]: " main_choice
+    read -p "Enter choice [1-5]: " main_choice
 
     case $main_choice in
         1) break ;; # Continue to full deployment logic
         2) fast_rebuild ;;
         3) run_diagnostics ;;
-        4) exit 0 ;;
+        4) show_resource_monitor ;;
+        5) exit 0 ;;
         *) echo -e "${RED}Invalid choice!${NC}"; sleep 1 ;;
     esac
 done
