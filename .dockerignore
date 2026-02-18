@@ -1,0 +1,17 @@
+.git
+.gitignore
+node_modules
+services/*/node_modules
+services/*/.env
+**/*.md
+**/*.log
+dist
+build
+coverage
+tmp
+temp
+docker-compose.yml
+Docker
+k8s
+deploy.sh
+deploy.ps1

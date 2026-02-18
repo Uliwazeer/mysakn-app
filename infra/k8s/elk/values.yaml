@@ -1,0 +1,38 @@
+# Values for elastic stack monitoring
+elasticsearch:
+  replicas: 1
+  minimumMasterNodes: 1
+  persistence:
+    enabled: false
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+
+kibana:
+  enabled: true
+  service:
+    type: NodePort
+    nodePort: 30060
+
+logstash:
+  enabled: true
+  persistence:
+    enabled: false
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+filebeat:
+  enabled: true
+  daemonset:
+    extraEnvs:
+      - name: ELASTICSEARCH_HOSTS
+        value: "elasticsearch-master:9200"

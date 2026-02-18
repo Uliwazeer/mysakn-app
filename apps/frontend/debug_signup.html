@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Debugger - MySakn Signup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #0f172a;
+            color: white;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #0ea5e9;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #0284c7;
+        }
+
+        #debug-log {
+            background: #000;
+            color: #4ade80;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #334155;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 5px;
+        }
+
+        .log-error {
+            color: #f87171;
+        }
+
+        .log-success {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .log-info {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>🛠️ MySakn Signup Debugger</h2>
+        <p style="color: #94a3b8;">This tool will log every step of the signup process to the screen.</p>
+
+        <form id="debugForm">
+            <div class="form-row">
+                <label>Target API URL (relative to this page)</label>
+                <input type="text" id="apiUrl" value="/api/auth/register">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-row">
+                    <label>Full Name</label>
+                    <input type="text" id="name" value="Ali Debugger">
+                </div>
+                <div class="form-row">
+                    <label>Email</label>
+                    <input type="email" id="email" value="debug@mysakn.com">
+                </div>
+            </div>
+            <button type="submit" id="submitBtn">🚀 Send Test Registration</button>
+        </form>
+
+        <div id="debug-log">
+            <div class="log-entry log-info">[System] Waiting for user action...</div>
+        </div>
+    </div>
+
+    <script>
+        const logContainer = document.getElementById('debug-log');
+        const form = document.getElementById('debugForm');
+
+        function log(msg, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `[${time}] ${msg}`;
+            logContainer.prepend(entry);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = '⌛ Sending...';
+
+            const url = document.getElementById('apiUrl').value;
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                password: 'password123',
+                role: 'student'
+            };
+
+            log(`Step 1: Preparing data for ${data.email}...`, 'info');
+            log(`Step 2: Sending POST request to ${url}...`, 'info');
+
+            try {
+                const startTime = Date.now();
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const endTime = Date.now();
+
+                log(`Step 3: Received Response. Status: ${response.status} (${response.statusText}) in ${endTime - startTime}ms`, response.ok ? 'success' : 'error');
+
+                const responseText = await response.text();
+                log(`Step 4: Raw Response Body: ${responseText}`, 'info');
+
+                try {
+                    const jsonData = JSON.parse(responseText);
+                    if (response.ok) {
+                        log(`✅ SUCCESS! User ID: ${jsonData.user.id}`, 'success');
+                        log(`Token: ${jsonData.token.substring(0, 20)}...`, 'info');
+                    } else {
+                        log(`❌ SERVER REJECTED: ${jsonData.error || jsonData.msg}`, 'error');
+                    }
+                } catch (jsonErr) {
+                    log(`❌ FAILED TO PARSE JSON: ${jsonErr.message}`, 'error');
+                }
+
+            } catch (error) {
+                log(`❌ NETWORK ERROR: ${error.message}`, 'error');
+                log(`Checking possible causes:`, 'info');
+                log(`- Is Nginx running on port 30080?`, 'info');
+                log(`- Is /api/auth/ correctly routed in nginx.conf?`, 'info');
+                log(`- Current Hostname: ${location.hostname}`, 'info');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '🚀 Send Test Registration';
+            }
+        });
+
+        // Auto-check connectivity
+        log(`Checking API Gateway health...`, 'info');
+        fetch('/api/auth/health').then(r => {
+            log(`API Gateway Health Check: Status ${r.status}`, r.ok ? 'success' : 'error');
+        }).catch(e => {
+            log(`API Gateway unreachable: ${e.message}`, 'error');
+        });
+    </script>
+</body>
+
+</html>

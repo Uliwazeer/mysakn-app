@@ -1,0 +1,55 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+.nyc_output
+
+# Production
+build
+dist
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Microservices specific (if individual services use separate node_modules that git should ignore)
+services/*/node_modules
+services/*/dist
+services/*/coverage
+services/*/.env
+
+# Docker
+docker-compose.override.yml
+
+# Environment Variables (IMPORTANT: Don't commit secrets!)
+.env
+services/*/.env
+
+# Temporary or large files
+*.tar
+*.gz
+*.zip
+tmp/
+temp/

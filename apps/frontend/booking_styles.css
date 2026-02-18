@@ -1,0 +1,53 @@
+
+/* Booking Modal Styles */
+.booking-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.payment-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.payment-option:hover {
+    background: #f9f9f9;
+    border-color: var(--primary);
+}
+
+.payment-option input {
+    width: auto;
+    margin: 0;
+}
+
+.payment-option img {
+    height: 24px;
+    object-fit: contain;
+}
+
+.price-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.total-price {
+    font-size: 1.2rem;
+    color: var(--primary);
+}

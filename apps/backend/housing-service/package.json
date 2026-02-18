@@ -1,0 +1,19 @@
+{
+    "name": "housing-service",
+    "version": "1.0.0",
+    "description": "Housing Listing Service for MySakn",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "mongoose": "^7.0.3",
+        "dotenv": "^16.0.3",
+        "cors": "^2.8.5"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.22"
+    }
+}

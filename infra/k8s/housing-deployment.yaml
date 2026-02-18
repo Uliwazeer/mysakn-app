@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: housing-service
+  namespace: mysakn-app
+  labels:
+    app: housing-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: housing-service
+  template:
+    metadata:
+      labels:
+        app: housing-service
+    spec:
+      containers:
+      - name: housing-service
+        image: housing-service:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3002
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3002
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3002
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongodb:27017/housing-db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: housing-service
+  namespace: mysakn-app
+spec:
+  type: NodePort
+  ports:
+  - port: 3002
+    targetPort: 3002
+    nodePort: 30002
+  selector:
+    app: housing-service

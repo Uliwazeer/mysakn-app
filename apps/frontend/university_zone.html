@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cairo University Zone | MySakn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+
+<body>
+    <header class="navbar" style="position: relative; background: white;">
+        <div class="container">
+            <div class="navbar-inner">
+                <a href="index.html" class="brand-logo">
+                    <i class="material-icons-round brand-icon">cottage</i>
+                    <div>MySakn <small>Housing & Community</small></div>
+                </a>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="javascript:void(0)" class="nav-link" onclick="handleDashboardNav()">Dashboard</a>
+                    <a href="javascript:void(0)" class="nav-link active" onclick="handleUnivZoneNav()">University
+                        Zones</a>
+                </div>
+                <div class="nav-auth">
+                    <a href="#" class="nav-link" onclick="toggleModal('loginModal')">Log In</a>
+                    <a href="#" class="btn btn-primary" onclick="toggleModal('signupModal')">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Zone Header -->
+    <div class="zone-header">
+        <div class="container">
+            <span class="hero-tag">University Zone</span>
+            <h1 style="font-size: 3rem; margin: 10px 0;">Cairo University</h1>
+            <p>Giza, Egypt • 45,000+ Students in Area</p>
+
+            <div class="zone-stats">
+                <span class="stat-badge"><i class="material-icons-round">payments</i> Avg Rent: 3,200 EGP</span>
+                <span class="stat-badge"><i class="material-icons-round">directions_walk</i> Avg Commute: 10 min</span>
+                <span class="stat-badge"><i class="material-icons-round">star</i> Top Rated Zone</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+
+                <!-- Map View Integrated -->
+                <div id="map-wrap"
+                    style="width: 100%; height: 350px; border-radius: 20px; overflow: hidden; margin-bottom: 40px; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); position: relative;">
+                    <div id="listing-map" style="width: 100%; height: 100%;"></div>
+                    <div
+                        style="position: absolute; bottom: 20px; right: 20px; z-index: 1000; background: white; padding: 10px 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-size: 12px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                        <span style="width: 10px; height: 10px; background: #0ea5e9; border-radius: 50%;"></span>
+                        LIVE PROPERTY MAP
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div style="flex: 1; min-width: 300px;">
+                    <h3>Community Insights</h3>
+                    <div class="community-tip">
+                        <i class="material-icons-round" style="color: var(--primary)">lightbulb</i>
+                        <div>
+                            <strong>Student Tip:</strong>
+                            <p style="margin: 5px 0 0; color: #555;">Dokki area is quieter for exams but slightly more
+                                expensive. Ben El Sarayat is cheaper but noisier.</p>
+                        </div>
+                    </div>
+                    <div class="community-tip">
+                        <i class="material-icons-round" style="color: var(--secondary)">directions_bus</i>
+                        <div>
+                            <p style="margin: 5px 0 0; color: #555;">Metro (Cairo Univ Station) is the fastest way to
+                                get to Downtown.</p>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 30px;">Exam Stay Options</h3>
+                    <div class="filter-toggles" style="flex-wrap: wrap;">
+                        <button class="filter-toggle active"><i class="material-icons-round">edit_calendar</i> Exam
+                            Period</button>
+                        <button class="filter-toggle"><i class="material-icons-round">work_outline</i>
+                            Internship</button>
+                    </div>
+                </div>
+
+                <!-- Listings -->
+                <div style="flex: 2; min-width: 300px;">
+                    <div class="section-header">
+                        <h2>Top Picks for Cairo Univ.</h2>
+                        <div class="filter-toggles">
+                            <button class="filter-toggle active">All</button>
+                            <button class="filter-toggle">Walking Distance</button>
+                        </div>
+                    </div>
+
+                    <div class="listings-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+
+                        <!-- Listing 1 Duplicate -->
+                        <article class="listing-card">
+                            <div class="card-img-wrap">
+                                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                    alt="Room">
+                                <span class="badge verified"><i class="material-icons-round"
+                                        style="font-size:10px">verified</i> Identity Verified</span>
+                                <span class="badge match-score">🔥 99% Match</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="price-row">
+                                    <span class="price">2,800 EGP <small>/mo</small> <span class="price-fairness">✅
+                                            Fair</span></span>
+                                    <span class="rating">★ 4.9</span>
+                                </div>
+                                <h4>Dokki Private Room</h4>
+                                <p class="loc"><i class="material-icons-round">place</i> 8 min walk to Main Gate</p>
+                                <div class="perks">
+                                    <span><i class="material-icons-round">wifi</i> Wifi</span>
+                                    <span><i class="material-icons-round">desk</i> Desk</span>
+                                </div>
+                                <button class="btn-primary full-width">Book Now</button>
+                            </div>
+                        </article>
+
+                        <!-- Listing 2 -->
+                        <article class="listing-card">
+                            <div class="card-img-wrap">
+                                <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                    alt="Room">
+                                <span class="badge verified"><i class="material-icons-round"
+                                        style="font-size:10px">verified</i> Identity Verified</span>
+                                <span class="badge match-score">❤️ 94% Match</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="price-row">
+                                    <span class="price">1,500 EGP <small>/mo</small> <span class="price-fairness">💰
+                                            Deal</span></span>
+                                    <span class="rating">★ 4.5</span>
+                                </div>
+                                <h4>Shared Room - Ben El Sarayat</h4>
+                                <p class="loc"><i class="material-icons-round">place</i> 2 min to Commerce Faculty</p>
+                                <div class="perks">
+                                    <span><i class="material-icons-round">group</i> Shared</span>
+                                    <span><i class="material-icons-round">menu_book</i> Quiet</span>
+                                </div>
+                                <button class="btn-primary full-width">Book Now</button>
+                            </div>
+                        </article>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-box" style="max-width: 500px;">
+            <button class="close-btn" onclick="toggleModal('reviewModal')"><i
+                    class="material-icons-round">close</i></button>
+            <div class="modal-header">
+                <h3>Community Reviews</h3>
+                <p id="reviewListingName">Listing Name</p>
+            </div>
+
+            <div id="reviewsList"
+                style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; padding: 10px; background: #f8fafc; border-radius: 12px;">
+                <!-- Dynamic Reviews -->
+            </div>
+
+            <form class="review-form" onsubmit="event.preventDefault(); submitUserReview();">
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div class="star-rating" style="display: flex; gap: 5px; color: #f59e0b; margin-bottom: 10px;">
+                        <input type="radio" name="rating" value="5" id="s5" checked><label for="s5">★</label>
+                        <input type="radio" name="rating" value="4" id="s4"><label for="s4">★</label>
+                        <input type="radio" name="rating" value="3" id="s3"><label for="s3">★</label>
+                        <input type="radio" name="rating" value="2" id="s2"><label for="s2">★</label>
+                        <input type="radio" name="rating" value="1" id="s1"><label for="s1">★</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Your Experience</label>
+                    <textarea id="reviewText" placeholder="How was your stay? (Cleanliness, WiFi, Host, etc.)"
+                        style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"
+                        required></textarea>
+                </div>
+                <button type="submit" class="btn-primary full-width">Post Review</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="toggleModal('bookingModal')"><i
+                    class="material-icons-round">close</i></button>
+            <div class="modal-header">
+                <h3>Schedule Your Visit</h3>
+                <p id="bookingListingName">Listing Name</p>
+            </div>
+            <form class="booking-form" onsubmit="event.preventDefault(); handleBookingSubmit();">
+                <div class="form-group">
+                    <label>Preferred Visit Date</label>
+                    <input type="date" id="visitDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Time</label>
+                    <select id="visitTime" required>
+                        <option value="">Select time</option>
+                        <option value="morning">Morning (9 AM - 12 PM)</option>
+                        <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                        <option value="evening">Evening (4 PM - 7 PM)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Availability Calendar</label>
+                    <div class="availability-calendar"
+                        style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 8px;">
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">S</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">M</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">T</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">W</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">T</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">F</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">S</div>
+                        <div class="cal-day booked"
+                            style="background: #fee2e2; color: #ef4444; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; position: relative;"
+                            title="Booked">1</div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            2</div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            3</div>
+                        <div class="cal-day active"
+                            style="background: #0ea5e9; color: white; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px;">
+                            4</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Planned Move-in Date</label>
+                    <input type="date" id="moveInDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Number of Residents</label>
+                    <select id="residentCount" required>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 Persons</option>
+                        <option value="3">3 Persons</option>
+                        <option value="4">4 Persons</option>
+                    </select>
+                </div>
+
+                <div class="price-summary-box">
+                    <div class="price-row total">
+                        <span>Total Due Now</span>
+                        <span id="bookingTotalPrice">1,200 EGP</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Reserve Visit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-centered">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-col">
+                    <h4>Learn</h4>
+                    <ul>
+                        <li><a href="#">What Is MySakn?</a></li>
+                        <li><a href="#">Housing Concepts Hub</a></li>
+                        <li><a href="#">MySakn Safety</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Getting Started</a></li>
+                        <li><a href="#">Training</a></li>
+                        <li><a href="#">MySakn Trust Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">File a Support Ticket</a></li>
+                        <li><a href="#">MySakn re:Post</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="social-links">
+                    <a href="#" class="social-btn facebook"><img
+                            src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook"></a>
+                    <a href="#" class="social-btn instagram"><img
+                            src="https://www.svgrepo.com/show/452229/instagram-1.svg" alt="Instagram"></a>
+                    <a href="#" class="social-btn twitter"><img src="https://www.svgrepo.com/show/501221/twitter-3.svg"
+                            alt="Twitter"></a>
+                    <a href="#" class="social-btn linkedin"><img src="https://www.svgrepo.com/show/448234/linkedin.svg"
+                            alt="LinkedIn"></a>
+                </div>
+
+                <div class="copyright">
+                    <p><strong>MySakn.</strong></p>
+                    <p>MySakn saves you the trip of searching for housing through our platform.</p>
+                    <div class="footer-links">
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Legal</a>
+                    </div>
+                    <p style="margin-top:10px; opacity: 0.6;">© 2026, MySakn Inc. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <script>
+        let map;
+        function initMap(results) {
+            const mapContainer = document.getElementById('listing-map');
+            if (!mapContainer) return;
+
+            if (!map) {
+                map = L.map('listing-map').setView([30.0444, 31.2357], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+            }
+
+            // Clear markers simulation: for demo we just add new ones
+            results.forEach((l, i) => {
+                const lat = 30.01 + (Math.random() * 0.05);
+                const lon = 31.21 + (Math.random() * 0.05);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(`<strong>${l.title}</strong><br>EGP ${l.price}/mo`);
+            });
+
+            if (results.length > 0) {
+                map.panTo([30.03, 31.22]);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const gov = params.get('gov');
+            const loc = params.get('loc');
+            const mode = params.get('mode') || 'student';
+            const budget = params.get('budget');
+            const gender = params.get('gender') || 'any';
+
+            if (gov) {
+                const titleEl = document.querySelector('.zone-header h1');
+                const subtitleEl = document.querySelector('.zone-header p');
+
+                let typeLabel = "Housing";
+                if (mode === 'student') typeLabel = "Student Housing";
+                else if (mode === 'medical') typeLabel = "Medical Stays";
+                else if (mode === 'employee') typeLabel = "Professional Housing";
+
+                if (loc) {
+                    titleEl.textContent = `${loc} ${typeLabel}`;
+                } else {
+                    titleEl.textContent = `${gov.charAt(0).toUpperCase() + gov.slice(1)} ${typeLabel} Hub`;
+                }
+
+                const allListings = db.getListings();
+                const filtered = allListings.filter(l => {
+                    const matchGov = l.location.toLowerCase().includes(gov.toLowerCase()) || gov.toLowerCase() === 'cairo';
+                    const matchMode = l.type.toLowerCase() === mode.toLowerCase();
+                    const matchLoc = loc ? l.location.toLowerCase().includes(loc.toLowerCase()) : true;
+
+                    let matchGender = true;
+                    if (gender !== 'any') {
+                        matchGender = (l.genderPolicy === gender || l.genderPolicy === 'any');
+                    }
+
+                    let matchBudget = true;
+                    if (budget === 'economy') matchBudget = l.price < 3000;
+                    else if (budget === 'standard') matchBudget = l.price >= 3000 && l.price < 6000;
+                    else if (budget === 'premium') matchBudget = l.price >= 6000;
+
+                    return matchGov && matchMode && matchLoc && matchBudget && matchGender;
+                });
+
+                renderFilteredResults(filtered, loc || gov);
+                initMap(filtered);
+            }
+        });
+
+        function renderFilteredResults(results, locationName) {
+            const grid = document.querySelector('.listings-grid');
+            const sectionTitle = document.querySelector('.section-header h2');
+
+            sectionTitle.textContent = results.length > 0 ? `Verified Units for ${locationName}` : `No Units Found for ${locationName}`;
+            grid.innerHTML = '';
+
+            results.forEach(l => {
+                const article = document.createElement('article');
+                article.className = 'listing-card';
+                let statusColor = '#059669';
+                let statusText = 'Available Now';
+                if (l.availability === 'last_room') { statusColor = '#d97706'; statusText = 'Last Room Left'; }
+                if (l.availability === 'booked') { statusColor = '#ef4444'; statusText = 'Fully Booked'; }
+
+                article.innerHTML = `
+                    <div class="card-img-wrap">
+                        <img src="${l.image}" alt="${l.title}">
+                        ${l.verified ? `<span class="badge verified"><i class="material-icons-round" style="font-size:10px">verified</i> Host Verified</span>` : ''}
+                        <span class="badge availability" style="background: ${statusColor}; top: 10px; left: 10px;">${statusText}</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">${l.price.toLocaleString()} EGP <small>/mo</small></span>
+                            <span class="rating" style="cursor: pointer;" onclick="openReviewModal('${l.title}', '${l.id || l.title}')">
+                                <i class="material-icons-round" style="font-size: 14px; color: #f59e0b;">star</i> ${l.rating || '4.5'} 
+                                <span style="font-size: 10px; color: #64748b; text-decoration: underline;">(Reviews)</span>
+                            </span>
+                        </div>
+                        <h4>${l.title}</h4>
+                        <p class="loc"><i class="material-icons-round" style="font-size: 14px;">place</i> ${l.location}</p>
+                        
+                        <div style="font-size: 11px; font-weight: 700; color: #64748b; margin: 10px 0; display: flex; align-items: center; gap: 5px;">
+                            <i class="material-icons-round" style="font-size: 14px; color: ${l.genderPolicy === 'female' ? '#db2777' : l.genderPolicy === 'male' ? '#2563eb' : '#64748b'}">
+                                ${l.genderPolicy === 'female' ? 'female' : l.genderPolicy === 'male' ? 'male' : 'people'}
+                            </i>
+                            POLICY: ${l.genderPolicy.toUpperCase()} ONLY
+                        </div>
+
+                        <div class="perks" style="margin-bottom: 12px;">
+                            ${l.amenities ? l.amenities.map(a => `<span><i class="material-icons-round" style="font-size:14px;">${a === 'wifi' ? 'wifi' : a === 'ac' ? 'ac_unit' : 'restaurant'}</i> ${a.charAt(0).toUpperCase() + a.slice(1)}</span>`).join('') : ''}
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase;">Nearby Amenities</p>
+                            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                                ${l.nearby ? l.nearby.map(n => `<span style="background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 10px; color: #475569;">${n}</span>`).join('') : '<span style="font-size:10px; color:gray;">Info not provided</span>'}
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 15px;">
+                            ${l.availability === 'full'
+                        ? `<button class="btn btn-outline full-width" onclick="addToWaitlist('${l.title}')" style="border-color: #f59e0b; color: #b45309; font-weight: 700;">Add to Waitlist ⏳</button>`
+                        : `<button class="btn-primary full-width" onclick="if(db.getCurrentUser()) { openBookingModal('${l.title}', ${l.price}) } else { toggleModal('signupModal') }">Book Now</button>`
+                    }
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(article);
+            });
+        }
+        let currentReviewListing = null;
+
+        function openReviewModal(title, id) {
+            currentReviewListing = { title, id };
+            document.getElementById('reviewListingName').textContent = title;
+
+            const list = document.getElementById('reviewsList');
+            const reviews = db.getReviews(id);
+
+            if (reviews.length === 0) {
+                list.innerHTML = `<p style="text-align: center; color: #94a3b8; padding: 20px;">No reviews yet. Be the first to share your experience!</p>`;
+            } else {
+                list.innerHTML = reviews.map(r => `
+                    <div style="padding: 12px; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <span style="font-weight: 700; font-size: 13px;">${r.userName}</span>
+                            <span style="color: #f59e0b;">${'★'.repeat(r.rating)}</span>
+                        </div>
+                        <p style="font-size: 12px; color: #475569; margin: 0;">${r.text}</p>
+                        <small style="font-size: 10px; color: #94a3b8;">${new Date(r.date).toLocaleDateString()}</small>
+                    </div>
+                `).join('');
+            }
+
+            toggleModal('reviewModal');
+        }
+
+        function submitUserReview() {
+            const user = db.getCurrentUser();
+            if (!user) return toggleModal('signupModal');
+
+            const text = document.getElementById('reviewText').value;
+            const rating = parseInt(document.querySelector('input[name="rating"]:checked').value);
+
+            const review = {
+                listingId: currentReviewListing.id,
+                listingTitle: currentReviewListing.title,
+                userName: user.name,
+                userEmail: user.email,
+                text,
+                rating
+            };
+
+            db.saveReview(review);
+            document.getElementById('reviewText').value = '';
+            alert("Review posted! Thanks for your feedback.");
+            toggleModal('reviewModal');
+
+            // Refresh main list to show updated rating
+            const params = new URLSearchParams(window.location.search);
+            const gov = params.get('gov');
+            if (gov) {
+                const filtered = db.getListings().filter(l => l.location.toLowerCase().includes(gov.toLowerCase()) || gov.toLowerCase() === 'cairo');
+                renderFilteredResults(filtered, gov);
+            }
+        }
+
+        function addToWaitlist(title) {
+            const user = db.getCurrentUser();
+            if (!user) return toggleModal('signupModal');
+
+            alert(`You've been added to the waitlist for ${title}! We will notify you as soon as a spot opens up.`);
+        }
+    </script>
+</body>
+
+</html>

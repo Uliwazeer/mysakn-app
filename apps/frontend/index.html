@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MySakn | Your Safe Home in Egypt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="container">
+            <div class="topbar-content">
+                <div class="topbar-left">
+                    <span class="pill-warm"><i class="material-icons-round" style="font-size:14px;">public</i> All
+                        Egypt</span>
+                    <span class="topbar-text">From Alexandria to Aswan, MySakn is your home.</span>
+                </div>
+                <div class="topbar-right">
+                    <a href="#" class="topbar-link"><i class="material-icons-round sm-icon">favorite</i> Medical
+                        Stays</a>
+                    <a href="#" class="topbar-link"><i class="material-icons-round sm-icon">work</i> Job Seeker
+                        Stays</a>
+                    <span class="divider">|</span>
+                    <a href="#" class="topbar-link">24/7 Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="container">
+            <div class="navbar-inner">
+                <a href="#" class="brand-logo">
+                    <i class="material-icons-round brand-icon">cottage</i>
+                    <div>MySakn <small>Housing & Community</small></div>
+                </a>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="javascript:void(0)" class="nav-link" onclick="handleDashboardNav()">Dashboard</a>
+                    <a href="javascript:void(0)" class="nav-link" onclick="handleUnivZoneNav()">University Zones</a>
+                </div>
+
+                <div class="nav-auth">
+                    <a href="#" class="nav-link" onclick="toggleModal('loginModal')">Log In</a>
+                    <a href="#" class="btn btn-primary" onclick="toggleModal('signupModal')">Sign Up</a>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-tag">Students • Medical • Employees • Families</span>
+                <h1 class="hero-title">Your Safe Home, Anywhere in Egypt.</h1>
+                <p class="hero-subtitle">Verified housing in 27 Governorates. Near Universities, Hospitals, and Work
+                    Zones.<br>Book online securely. No brokers, just peace of mind.</p>
+
+                <!-- Search Widget -->
+                <div class="search-widget" id="searchWidget">
+                    <div class="search-tabs">
+                        <button class="tab active" data-mode="student" onclick="setSearchMode('student', this)">
+                            <i class="material-icons-round">school</i> Student Stay
+                        </button>
+                        <button class="tab" data-mode="medical" onclick="setSearchMode('medical', this)">
+                            <i class="material-icons-round">local_hospital</i> Medical/Niyabat
+                        </button>
+                        <button class="tab" data-mode="employee" onclick="setSearchMode('employee', this)">
+                            <i class="material-icons-round">work</i> Job/Employee
+                        </button>
+                    </div>
+                    <div class="search-inputs">
+                        <div class="input-group">
+                            <label>GOVERNORATE</label>
+                            <div class="select-wrapper">
+                                <i class="material-icons-round">business</i>
+                                <select id="governorateSelect" onchange="updateLocationOptions()">
+                                    <option value="" disabled selected>Select Governorate</option>
+                                    <option value="cairo">Cairo</option>
+                                    <option value="giza">Giza</option>
+                                    <option value="qalyubia">Qalyubia</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="divider-vertical"></div>
+                        <div class="input-group wide-group">
+                            <label id="locationLabel">UNIVERSITY / INSTITUTE</label>
+                            <div class="select-wrapper">
+                                <i class="material-icons-round" id="locationIcon">school</i>
+                                <select id="locationSelect">
+                                    <option value="" disabled selected>Select Governorate First...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="divider-vertical"></div>
+                        <div class="input-group">
+                            <label>BUDGET / MONTH</label>
+                            <div class="select-wrapper">
+                                <i class="material-icons-round">payments</i>
+                                <select id="budgetFilter" onmousedown="handleBudgetInteraction(event)">
+                                    <option value="any">Any Budget</option>
+                                    <option value="economy">Economy (Shared)</option>
+                                    <option value="standard">Standard (Private)</option>
+                                    <option value="premium">Premium (Studio)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="search-btn" onclick="handleHeroSearch()">Find Home</button>
+                    </div>
+
+                    <div class="search-trust">
+                        <span><i class="material-icons-round" style="color:#0ea5e9">verified</i> Verified Hosts</span>
+                        <span><i class="material-icons-round" style="color:#0ea5e9">shield</i> Safe Neighborhoods</span>
+                        <span><i class="material-icons-round" style="color:#0ea5e9">handshake</i> No Commission</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Exam Stays Section -->
+    <section class="section" id="exam-stays">
+        <div class="container">
+            <div class="section-header">
+                <h2>Exam Stays (3–10 days)</h2>
+                <p>Perfect for finals week: short stays near campus with quiet study rules.</p>
+                <a href="#" class="link-arrow">Book Exam Stay</a>
+            </div>
+
+            <div class="listings-grid">
+                <!-- Exam Listing 1 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1544411047-c491574abb22?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Study Room">
+                        <span class="badge badge-exam"><i class="material-icons-round"
+                                style="font-size:10px">verified</i> Exam Stay Verified</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">220 EGP <small>/night</small></span>
+                            <span class="rating"><i class="material-icons-round"
+                                    style="font-size: 14px; color: #f59e0b;">star</i> 4.9</span>
+                        </div>
+                        <h4>Quiet Room • 5 min to gates</h4>
+                        <p class="loc">Study rules • No visitors • Night security</p>
+                        <div
+                            style="margin-bottom: 10px; font-size: 12px; font-weight: 700; color: #059669; display: flex; align-items: center; gap: 5px;">
+                            <i class="material-icons-round" style="font-size: 14px;">check_circle</i> Available Now
+                        </div>
+                        <div class="perks">
+                            <span><i class="material-icons-round">table_restaurant</i> Desk</span>
+                            <span><i class="material-icons-round">volume_off</i> Quiet</span>
+                            <span><i class="material-icons-round">wifi</i> Wi-Fi</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="if(db.getCurrentUser()) { openBookingModal('Quiet Room (Exam Stay)', 220) } else { toggleModal('signupModal') }">View</button>
+                    </div>
+                </article>
+
+                <!-- Exam Listing 2 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Shared Apt">
+                        <span class="badge badge-exam"><i class="material-icons-round"
+                                style="font-size:10px">verified</i> Exam Stay Verified</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">160 EGP <small>/night</small></span>
+                            <span class="rating">★ 4.7</span>
+                        </div>
+                        <h4>Shared Apartment • 2 Rooms</h4>
+                        <p class="loc">Kitchen • Supermarket nearby • 10 min to campus</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">kitchen</i> Kitchen</span>
+                            <span><i class="material-icons-round">savings</i> Budget</span>
+                            <span><i class="material-icons-round">directions_bus</i> Near Bus</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="if(db.getCurrentUser()) { openBookingModal('Shared Apt (Exam Stay)', 160) } else { toggleModal('signupModal') }">View</button>
+                    </div>
+                </article>
+
+                <!-- Exam Listing 3 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1536376074432-8d2a3ea4274c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Studio">
+                        <span class="badge badge-exam"><i class="material-icons-round"
+                                style="font-size:10px">verified</i> Exam Stay Verified</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">340 EGP <small>/night</small></span>
+                            <span class="rating">★ 4.8</span>
+                        </div>
+                        <h4>Studio • 12 min to campus</h4>
+                        <p class="loc">Private studio • AC • Study corner • Elevator</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">person</i> Private</span>
+                            <span><i class="material-icons-round">ac_unit</i> AC</span>
+                            <span><i class="material-icons-round">elevator</i> Elevator</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="if(db.getCurrentUser()) { openBookingModal('Private Studio (Exam Stay)', 340) } else { toggleModal('signupModal') }">View</button>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Listings Section -->
+    <section class="section bg-warm" id="listings">
+        <div class="container">
+            <div class="section-header">
+                <h2>Handpicked Homes ("MySakn")</h2>
+                <p>Most popular choices near you</p>
+                <a href="#" class="link-arrow">View All Listings</a>
+            </div>
+
+            <!-- Static Listings for Demo -->
+            <div class="listings-grid">
+                <!-- Listing 1 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Room">
+                        <span class="badge verified"><i class="material-icons-round" style="font-size:10px">verified</i>
+                            Identity Verified</span>
+                        <span class="badge match-score">🔥 98% Match</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">2,500 EGP <small>/mo</small> <span class="price-fairness">✅ Good
+                                    Price</span></span>
+                            <span class="rating"><i class="material-icons-round"
+                                    style="font-size: 14px; color: #f59e0b;">star</i> 4.8</span>
+                        </div>
+                        <h4>Sunny Room in Nasr City</h4>
+                        <p class="loc"><i class="material-icons-round">place</i> 5 min to Al-Azhar Univ.</p>
+                        <div
+                            style="margin-bottom: 10px; font-size: 12px; font-weight: 700; color: #f59e0b; display: flex; align-items: center; gap: 5px;">
+                            <i class="material-icons-round" style="font-size: 14px;">schedule</i> Last Room Left
+                        </div>
+                        <div class="perks">
+                            <span><i class="material-icons-round">wifi</i> Wifi</span>
+                            <span><i class="material-icons-round">ac_unit</i> AC</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Sunny Room in Nasr City', 2500)">Reserve Viewing</button>
+                    </div>
+                </article>
+
+                <!-- Listing 2 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Room">
+                        <span class="badge verified"><i class="material-icons-round" style="font-size:10px">verified</i>
+                            Identity Verified</span>
+                        <span class="badge match-score">❤️ 95% Match</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">3,500 EGP <small>/mo</small> <span class="price-fairness">📉 10% Below
+                                    Avg</span></span>
+                            <span class="rating">★ 5.0</span>
+                        </div>
+                        <h4>Quiet Studio - Kasr Al Ainy</h4>
+                        <p class="loc"><i class="material-icons-round">place</i> Manial (Walking Distance)</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">local_laundry_service</i> Laundry</span>
+                            <span><i class="material-icons-round">elevator</i> Elevator</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Quiet Studio - Kasr Al Ainy', 3500)">Reserve Viewing</button>
+                    </div>
+                </article>
+
+                <!-- Listing 3 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Room">
+                        <span class="badge verified"><i class="material-icons-round" style="font-size:10px">verified</i>
+                            Identity Verified</span>
+                        <span class="badge match-score">💎 Top Choice</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">5,000 EGP <small>/mo</small></span>
+                            <span class="rating">★ New</span>
+                        </div>
+                        <h4>Modern Apt - 5th Settlement</h4>
+                        <p class="loc"><i class="material-icons-round">place</i> Near 90 St & Companies</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">pool</i> Pool</span>
+                            <span><i class="material-icons-round">security</i> Security</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Modern Apt - 5th Settlement', 5000)">Reserve Viewing</button>
+                    </div>
+                </article>
+
+                <!-- Listing 4 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Room">
+                        <span class="badge verified"><i class="material-icons-round" style="font-size:10px">verified</i>
+                            Identity Verified</span>
+                        <span class="badge match-score">⭐ 92% Match</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">1,800 EGP <small>/mo</small> <span class="price-fairness">💰 Best
+                                    Deal</span></span>
+                            <span class="rating">★ 4.6</span>
+                        </div>
+                        <h4>Cozy Shared Room - Dokki</h4>
+                        <p class="loc"><i class="material-icons-round">place</i> 10 min to Cairo Univ.</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">wifi</i> Wifi</span>
+                            <span><i class="material-icons-round">local_laundry_service</i> Laundry</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Cozy Shared Room - Dokki', 1800)">Reserve Viewing</button>
+                    </div>
+                </article>
+
+                <!-- Listing 6 -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Room">
+                        <span class="badge verified"><i class="material-icons-round" style="font-size:10px">verified</i>
+                            Identity Verified</span>
+                        <span class="badge match-score">🔥 96% Match</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">2,900 EGP <small>/mo</small> <span class="price-fairness">✅
+                                    Fair</span></span>
+                            <span class="rating">★ 4.7</span>
+                        </div>
+                        <h4>Female Only - Heliopolis</h4>
+                        <p class="loc"><i class="material-icons-round">place</i> Near Ain Shams Univ.</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">security</i> Secure</span>
+                            <span><i class="material-icons-round">wifi</i> Wifi</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Female Only - Heliopolis', 2900)">Reserve Viewing</button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Explore Housing Section -->
+    <section class="section" id="explore-housing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Explore housing</h2>
+                <p>Choose your university/destination, select areas, verify safety, and book instantly.</p>
+                <a href="#" class="link-arrow">Advanced Filters</a>
+            </div>
+
+            <div class="listings-grid">
+                <!-- Economy Tier -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Economy Room">
+                        <span class="badge badge-economy"><i class="material-icons-round"
+                                style="font-size:10px">verified</i> Economy Verified</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">2,200 EGP <small>/month</small></span>
+                            <span class="rating">★ 4.7</span>
+                        </div>
+                        <h4>Shared Room • 7 min to campus</h4>
+                        <p class="loc">Furnished • Wi-Fi • Study Desk • Security camera</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">hotel</i> 2 Beds</span>
+                            <span><i class="material-icons-round">kitchen</i> Kitchen</span>
+                            <span><i class="material-icons-round">subway</i> Near Metro</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Economy Shared Room', 2200)">View</button>
+                    </div>
+                </article>
+
+                <!-- Standard Tier -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Standard Room">
+                        <span class="badge badge-standard"><i class="material-icons-round"
+                                style="font-size:10px">verified</i> Standard Verified</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">3,800 EGP <small>/month</small></span>
+                            <span class="rating">★ 4.8</span>
+                        </div>
+                        <h4>Private Room • Dokki</h4>
+                        <p class="loc">Quiet building • Laundry • AC • Student-only</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">person_outline</i> Private</span>
+                            <span><i class="material-icons-round">ac_unit</i> AC</span>
+                            <span><i class="material-icons-round">local_laundry_service</i> Laundry</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Standard Private Room', 3800)">View</button>
+                    </div>
+                </article>
+
+                <!-- Premium Tier -->
+                <article class="listing-card">
+                    <div class="card-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Premium Studio">
+                        <span class="badge badge-premium"><i class="material-icons-round"
+                                style="font-size:10px">verified</i> Premium Verified</span>
+                        <button class="wishlist-btn"><i class="material-icons-round">favorite_border</i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="price-row">
+                            <span class="price">6,900 EGP <small>/month</small></span>
+                            <span class="rating">★ 4.9</span>
+                        </div>
+                        <h4>Studio • Mohandeseen</h4>
+                        <p class="loc">Modern studio • Elevator • 15 min to campus</p>
+                        <div class="perks">
+                            <span><i class="material-icons-round">apartment</i> Studio</span>
+                            <span><i class="material-icons-round">elevator</i> Elevator</span>
+                            <span><i class="material-icons-round">check_circle</i> Modern</span>
+                        </div>
+                        <button class="btn-primary full-width"
+                            onclick="openBookingModal('Premium Studio', 6900)">View</button>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust & Safety (Student Focused) -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header center">
+                <h2>Trust & Safety First</h2>
+                <p>Your peace of mind is our priority. Our professional payment and security systems protect you every
+                    step of the way.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="material-icons-round">gavel</i></div>
+                    <h3>Escrow System</h3>
+                    <p><strong>Your money is safe.</strong> We hold your payment securely and only release it to the
+                        landlord <em>after</em> you successfully check-in. No scams, no surprises.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="material-icons-round">description</i></div>
+                    <h3>Digital Contracts</h3>
+                    <p>Instant, legally binding PDF contracts generated automatically upon booking. Official invoices
+                        provided for every transaction.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="material-icons-round">security</i></div>
+                    <h3>Damage Protection</h3>
+                    <p>Fair damage assessment. Security deposits are protected and only deducted from if proven damage
+                        occurs, verified by our team.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- For Landlords (Monetization & Tools) -->
+    <section class="section bg-warm">
+        <div class="container">
+            <div class="section-header center">
+                <h2>Partner with MySakn</h2>
+                <p>Maximize your rental income with our professional tools and flexible commission models.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Commission Models -->
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="material-icons-round">monetization_on</i></div>
+                    <h3>Commission Models</h3>
+                    <p>Choose how you pay: <strong>Per Booking</strong> (5-10%), <strong>Subscription</strong> (Monthly
+                        fee for unlimited listings), or <strong>Per Lead</strong>.</p>
+                </div>
+
+                <!-- Ad Boosts -->
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="material-icons-round">trending_up</i></div>
+                    <h3>Boost Your Listing</h3>
+                    <p>Get up to 5x more views with <strong>Featured Listings</strong>, <strong>Sponsored Ads</strong>,
+                        and "Top Choice" badges.</p>
+                </div>
+
+                <!-- Management -->
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="material-icons-round">verified_user</i></div>
+                    <h3>Verified Badge</h3>
+                    <p>Stand out and build trust. Get your account and listings verified for a small fee to attract
+                        serious tenants.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Carousel -->
+    <section class="partners-section">
+        <div class="container">
+            <h4 class="partners-header">Trusted By Students & Employees From</h4>
+            <div class="ticker-wrap">
+                <div class="ticker">
+                    <!-- Set 1 -->
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/e/e0/Cairo_University_Logo.png"
+                            alt="Cairo Univ"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/c/c6/Ain_Shams_University_logo.png"
+                            alt="Ain Shams"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/4/46/American_University_in_Cairo_logo.png"
+                            alt="AUC"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/6/6f/German_University_in_Cairo_Logo.png"
+                            alt="GUC"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+                    </div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/a/bf/Vodafone_2017_logo.svg"
+                            alt="Vodafone"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" alt="Accenture">
+                    </div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/0/05/PricewaterhouseCoopers_Logo.svg"
+                            alt="PwC"></div>
+
+                    <!-- Set 2 (Duplicate for Infinite Scroll) -->
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/e/e0/Cairo_University_Logo.png"
+                            alt="Cairo Univ"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/c/c6/Ain_Shams_University_logo.png"
+                            alt="Ain Shams"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/4/46/American_University_in_Cairo_logo.png"
+                            alt="AUC"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/en/6/6f/German_University_in_Cairo_Logo.png"
+                            alt="GUC"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+                    </div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/a/bf/Vodafone_2017_logo.svg"
+                            alt="Vodafone"></div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" alt="Accenture">
+                    </div>
+                    <div class="ticker-item"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/0/05/PricewaterhouseCoopers_Logo.svg"
+                            alt="PwC"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-centered">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-col">
+                    <h4>Learn</h4>
+                    <ul>
+                        <li><a href="#">What Is MySakn?</a></li>
+                        <li><a href="#">Housing Concepts Hub</a></li>
+                        <li><a href="#">MySakn Safety</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="dashboard.html">My Dashboard</a></li>
+                        <li><a href="profile.html">Account Settings</a></li>
+                        <li><a href="university_zone.html">University Zones</a></li>
+                        <li><a href="#">Getting Started</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">File a Support Ticket</a></li>
+                        <li><a href="#">MySakn re:Post</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="social-links">
+                    <a href="#" class="social-btn facebook"><img
+                            src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook"></a>
+                    <a href="#" class="social-btn instagram"><img
+                            src="https://www.svgrepo.com/show/452229/instagram-1.svg" alt="Instagram"></a>
+                    <a href="#" class="social-btn twitter"><img src="https://www.svgrepo.com/show/501221/twitter-3.svg"
+                            alt="Twitter"></a>
+                    <a href="#" class="social-btn linkedin"><img src="https://www.svgrepo.com/show/448234/linkedin.svg"
+                            alt="LinkedIn"></a>
+                </div>
+
+                <div class="copyright">
+                    <p><strong>MySakn.</strong></p>
+                    <p>We saved you the hassle of traveling to search for housing. <br>MySakn saves you the trip of
+                        searching for housing through our platform.</p>
+                    <div class="footer-links">
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Legal</a>
+                    </div>
+                    <p style="margin-top:10px; opacity: 0.6;">© 2026, MySakn Inc. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="toggleModal('loginModal')"><i
+                    class="material-icons-round">close</i></button>
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <p>Login to continue your search</p>
+            </div>
+            <div class="role-selector">
+                <button class="role-btn active" onclick="setRole('student', this)">
+                    <i class="material-icons-round">school</i> Student/Employee
+                </button>
+                <button class="role-btn" onclick="setRole('landlord', this)">
+                    <i class="material-icons-round">home</i> Owner
+                </button>
+                <button class="role-btn" onclick="setRole('broker', this)">
+                    <i class="material-icons-round">real_estate_agent</i> Broker
+                </button>
+            </div>
+            <form class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="student@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPass" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary full-width">Log In</button>
+
+                <div class="divider-text">OR</div>
+
+                <button type="button" class="btn-social google">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="G" width="20"> Continue with
+                    Google
+                </button>
+                <button type="button" class="btn-social facebook">
+                    <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="F" width="20"> Continue with
+                    Facebook
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" onclick="switchModal('loginModal', 'signupModal')">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal-box">
+            <img src="https://images.unsplash.com/photo-1556912173-3db996e16054?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                alt="Welcome" class="modal-welcome-img">
+            <button class="close-btn" onclick="toggleModal('signupModal')"><i
+                    class="material-icons-round">close</i></button>
+            <div class="modal-header">
+                <h3>Join MySakn</h3>
+                <p>Create an account to book your home</p>
+            </div>
+            <div class="role-selector">
+                <button class="role-btn active" onclick="setRole('student', this, true)">
+                    <i class="material-icons-round">school</i> Student/Employee
+                </button>
+                <button class="role-btn" onclick="setRole('landlord', this, true)">
+                    <i class="material-icons-round">apartment</i> Owner
+                </button>
+                <button class="role-btn" onclick="setRole('broker', this, true)">
+                    <i class="material-icons-round">real_estate_agent</i> Broker
+                </button>
+            </div>
+            <form class="auth-form" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>Select Gender</label>
+                    <div class="gender-selector">
+                        <input type="radio" name="gender" value="male" id="signupMale" checked>
+                        <label for="signupMale" class="gender-btn">
+                            <i class="material-icons-round">male</i> Male
+                        </label>
+                        <input type="radio" name="gender" value="female" id="signupFemale">
+                        <label for="signupFemale" class="gender-btn">
+                            <i class="material-icons-round">female</i> Female
+                        </label>
+                    </div>
+                </div>
+                <div class="row-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" placeholder="Ali Ahmed" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="signupAge" placeholder="20" required min="16" max="99">
+                    </div>
+                </div>
+                <div class="row-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="signupEmail" placeholder="student@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Home Governorate</label>
+                        <select id="signupHomeGov" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="cairo">Cairo</option>
+                            <option value="alexandria">Alexandria</option>
+                            <option value="giza">Giza</option>
+                            <option value="minya">Minya</option>
+                            <option value="asyut">Asyut</option>
+                            <option value="sohag">Sohag</option>
+                            <option value="qena">Qena</option>
+                            <option value="aswan">Aswan</option>
+                            <!-- Add more as needed -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPass" placeholder="Create a password" required>
+                </div>
+                <div id="roleSpecificFields">
+                    <!-- Dynamic Fields Injected Here -->
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Availability Calendar</label>
+                    <div class="availability-calendar"
+                        style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 8px;">
+                        <!-- Mock Days -->
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">S</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">M</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">T</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">W</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">T</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">F</div>
+                        <div style="font-size: 10px; color: #94a3b8; text-align: center; font-weight: 700;">S</div>
+
+                        <div class="cal-day booked"
+                            style="background: #fee2e2; color: #ef4444; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; position: relative;"
+                            title="Booked">1<span
+                                style="width: 4px; height: 4px; background: #ef4444; border-radius: 50%; position: absolute; bottom: 3px;"></span>
+                        </div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            2</div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            3</div>
+                        <div class="cal-day booked"
+                            style="background: #fee2e2; color: #ef4444; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; position: relative;"
+                            title="Booked">4<span
+                                style="width: 4px; height: 4px; background: #ef4444; border-radius: 50%; position: absolute; bottom: 3px;"></span>
+                        </div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            5</div>
+                        <div class="cal-day active"
+                            style="background: #0ea5e9; color: white; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.3);">
+                            6</div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            7</div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            8</div>
+                        <div class="cal-day booked"
+                            style="background: #fee2e2; color: #ef4444; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; position: relative;">
+                            9</div>
+                        <div class="cal-day"
+                            style="background: white; color: #1e293b; font-size: 11px; height: 25px; display: grid; place-items: center; border-radius: 6px; cursor: pointer; border: 1px solid #f1f5f9;">
+                            10</div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>ID / University proof (Image/PDF)</label>
+                    <input type="file" id="signupDocs" accept="image/*,.pdf">
+                    <p style="font-size: 11px; color: gray; margin-top: 5px;">We verify documents to ensure a safe
+                        environment.</p>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                    <label>Payment Method</label>
+                    <p style="font-size: 12px; color: gray; margin-bottom: 10px;">Select your preferred payment method
+                        to be used for bookings.</p>
+                    <div class="payment-options"
+                        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <label class="payment-option">
+                            <input type="radio" name="signupPayment" value="visa" onchange="togglePaymentDetails()"
+                                checked>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa"
+                                style="height: 18px;">
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="signupPayment" value="mastercard"
+                                onchange="togglePaymentDetails()">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg"
+                                alt="Mastercard" style="height: 25px;">
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="signupPayment" value="fawry" onchange="togglePaymentDetails()">
+                            <img src="https://www.fawry.com/wp-content/uploads/2023/11/Fawry-Logo-2023.png" alt="Fawry"
+                                style="height: 22px;">
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="signupPayment" value="vodafone" onchange="togglePaymentDetails()">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Vodafone_logo.svg"
+                                alt="Vodafone Cash" style="height: 25px;">
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="signupPayment" value="instapay" onchange="togglePaymentDetails()">
+                            <img src="https://www.instapay.eg/wp-content/uploads/2023/12/InstaPay-Logo.svg"
+                                alt="InstaPay" style="height: 18px;">
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="signupPayment" value="meeza" onchange="togglePaymentDetails()">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Meeza_logo.png" alt="Meeza"
+                                style="height: 20px;">
+                        </label>
+                    </div>
+
+                    <!-- Dynamic Payment Details Fields -->
+                    <div id="paymentDetailsFields" style="margin-top: 15px; display: block;">
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" id="cardNum" placeholder="1234 5678 9101 1121" maxlength="19">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <div class="form-group">
+                                <label>Expiry Date</label>
+                                <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="password" id="cardCvv" placeholder="•••" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Sign Up</button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" onclick="switchModal('signupModal', 'loginModal')">Log in</a>
+                </p>
+                <p style="margin-top: 5px; font-size: 11px; opacity: 0.7;">
+                    <a href="#" onclick="testConnection(this)">Test Connection</a> |
+                    <span id="connStatus">Ready</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="toggleModal('bookingModal')"><i
+                    class="material-icons-round">close</i></button>
+            <div class="modal-header">
+                <h3>Schedule Your Visit</h3>
+                <p id="bookingListingName">Listing Name</p>
+            </div>
+            <form class="booking-form" onsubmit="event.preventDefault(); handleBookingSubmit();">
+                <div class="form-group">
+                    <label>Preferred Visit Date</label>
+                    <input type="date" id="visitDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Time</label>
+                    <select id="visitTime" required>
+                        <option value="">Select time</option>
+                        <option value="morning">Morning (9 AM - 12 PM)</option>
+                        <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                        <option value="evening">Evening (4 PM - 7 PM)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Planned Move-in Date</label>
+                    <input type="date" id="moveInDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Number of Residents</label>
+                    <select id="residentCount" required>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 Persons</option>
+                        <option value="3">3 Persons</option>
+                        <option value="4">4 Persons</option>
+                        <option value="5">5 Persons</option>
+                        <option value="6+">6+ Persons</option>
+                    </select>
+                </div>
+
+
+
+                <div class="price-summary-box">
+                    <div class="price-row">
+                        <span>Viewing Deposit</span>
+                        <span id="depositAmount">400 EGP</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="price-row total">
+                        <span>Total Due Now</span>
+                        <span id="bookingTotalPrice">400 EGP</span>
+                    </div>
+                    <p class="cancellation-policy"><i class="material-icons-round" style="font-size:12px">schedule</i>
+                        We'll contact you within 12-24 hours to confirm your visit.</p>
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Reserve Visit</button>
+                <button type="button" class="btn-text full-width" onclick="cancelReservation()"
+                    style="margin-top: 10px;">Cancel Reservation</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

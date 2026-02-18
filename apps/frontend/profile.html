@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | MySakn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="navbar" style="position: relative; background: white; border-bottom: 1px solid #e2e8f0;">
+        <div class="container">
+            <div class="navbar-inner">
+                <a href="index.html" class="brand-logo">
+                    <i class="material-icons-round brand-icon">cottage</i>
+                    <div>MySakn <small>Housing & Community</small></div>
+                </a>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="javascript:void(0)" class="nav-link" onclick="handleDashboardNav()">Dashboard</a>
+                    <a href="javascript:void(0)" class="nav-link" onclick="handleUnivZoneNav()">University Zones</a>
+                </div>
+                <div class="nav-auth">
+                    <!-- Dynamic -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container profile-container">
+        <!-- Sidebar -->
+        <aside class="profile-sidebar">
+            <div class="avatar-large" id="profileAvatarContainer">
+                <span id="profileInitials">U</span>
+                <div id="verificationBadge"
+                    style="display: none; position: absolute; bottom: 0; right: 0; background: #059669; color: white; border-radius: 50%; width: 24px; height: 24px; border: 2px solid white; display: flex; align-items: center; justify-content: center;">
+                    <i class="material-icons-round" style="font-size: 16px;">verified</i>
+                </div>
+            </div>
+            <h3 style="margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span id="profileNameSide">User Name</span>
+            </h3>
+            <p id="profileEmailSide" style="font-size: 13px; color: gray; margin-bottom: 25px;">user@example.com</p>
+
+            <nav>
+                <div class="profile-nav-item active">
+                    <i class="material-icons-round">person</i> Personal Info
+                </div>
+                <div class="profile-nav-item">
+                    <i class="material-icons-round">security</i> Security
+                </div>
+                <div class="profile-nav-item">
+                    <i class="material-icons-round">payments</i> Payment Methods
+                </div>
+                <div class="profile-nav-item logout" onclick="db.logout()" style="color: #ef4444; margin-top: 20px;">
+                    <i class="material-icons-round">logout</i> Logout
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="profile-content">
+            <form id="profileUpdateForm">
+                <div class="settings-section">
+                    <h2 style="margin-bottom: 20px;">Profile Picture</h2>
+                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                        <input type="file" id="profPicFile" accept="image/*" style="display: none;"
+                            onchange="handleFileUpload(this)">
+                        <div class="avatar-large" id="previewAvatar">
+                            <span id="previewInitials">U</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button type="button" class="btn btn-outline"
+                                    onclick="document.getElementById('profPicFile').click()"
+                                    style="padding: 8px 15px; font-size: 13px;">
+                                    <i class="material-icons-round"
+                                        style="font-size: 16px; vertical-align: middle;">upload</i>
+                                    Choose from Device
+                                </button>
+                                <span style="font-size: 12px; color: gray; align-self: center;">(Max 2MB)</span>
+                            </div>
+                            <label>Image URL</label>
+                            <input type="text" id="profPicUrl" placeholder="https://example.com/photo.jpg"
+                                oninput="updateAvatarPreview(this.value)">
+                            <p style="font-size: 11px; color: gray; margin-top: 5px;">Or choose a quick avatar:</p>
+                            <div class="avatar-grid" id="avatarGrid">
+                                <!-- JS Populated -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 style="margin-bottom: 20px;">Personal Information</h2>
+                    <div class="row-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="profEmail" readonly
+                                style="background: #f8fafc; cursor: not-allowed;">
+                        </div>
+                    </div>
+                    <div class="row-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="profPhone" placeholder="+20 123 456 7890">
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" id="profAge" placeholder="20">
+                        </div>
+                    </div>
+                    <div class="row-grid" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="profGender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Home Governorate</label>
+                            <select id="profHomeGov">
+                                <option value="cairo">Cairo</option>
+                                <option value="alexandria">Alexandria</option>
+                                <option value="giza">Giza</option>
+                                <option value="minya">Minya</option>
+                                <option value="asyut">Asyut</option>
+                                <option value="sohag">Sohag</option>
+                                <option value="qena">Qena</option>
+                                <option value="aswan">Aswan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 style="margin-bottom: 20px;">Role Specifics</h2>
+                    <div id="roleSpecificContainer">
+                        <!-- Dynamic -->
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 style="margin-bottom: 20px;">Identity Verification & Documents</h2>
+                    <p style="font-size: 14px; color: #64748b; margin-bottom: 20px;">Upload documents to get a <span
+                            style="color: #059669; font-weight: 700;">Verified Badge</span>. This helps booking
+                        acceptance.</p>
+                    <div class="form-group">
+                        <label>Upload ID / University Proof / Acceptance Letter</label>
+                        <input type="file" id="profileDocs" multiple style="margin-bottom: 10px;">
+                        <p style="font-size: 11px; color: gray;">Accepted formats: PDF, JPG, PNG. Max 5MB per file.</p>
+                    </div>
+                    <div id="uploadedDocsList"
+                        style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                        <!-- List of uploaded docs -->
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 style="margin-bottom: 20px;">Security & Activity</h2>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8fafc; border-radius: 12px; margin-bottom: 20px;">
+                        <div>
+                            <h4 style="margin: 0;">Two-Factor Authentication (2FA)</h4>
+                            <p style="font-size: 12px; color: #64748b; margin: 4px 0 0;">Add an extra layer of security
+                                to your account.</p>
+                        </div>
+                        <input type="checkbox" id="tfaToggle" style="width: 40px; height: 20px; cursor: pointer;">
+                    </div>
+
+                    <div class="form-group" style="max-width: 400px;">
+                        <label>Change Password</label>
+                        <input type="password" id="profPass" placeholder="Enter new password to change">
+                        <p style="font-size: 11px; color: gray; margin-top: 5px;">Leave blank to keep your current
+                            password.</p>
+                    </div>
+
+                    <h3 style="font-size: 16px; margin: 25px 0 15px;">Recent Activity</h3>
+                    <div class="activity-log"
+                        style="background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead style="background: #f8fafc;">
+                                <tr>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0;">
+                                        Action</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0;">Date
+                                    </th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0;">
+                                        Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activityLogBody">
+                                <!-- JS Populated -->
+                                <tr>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f1f5f9;">Account Login</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f1f5f9;">Today, 10:30 AM</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #f1f5f9;"><span
+                                            style="color: #059669;">Successful</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="padding: 12px 30px;">Save Changes</button>
+            </form>
+        </main>
+    </div>
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Profile Initialization
+        const user = db.getCurrentUser();
+        if (!user) window.location.href = 'index.html';
+
+        const AVATARS = [
+            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=Liam',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack',
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=Zoe'
+        ];
+
+        function setAvatarDisplay(url, initials, containerId, initialsId) {
+            const container = document.getElementById(containerId);
+            if (url) {
+                container.innerHTML = `<img src="${url}" alt="Profile">`;
+            } else {
+                container.innerHTML = `<span id="${initialsId}">${initials}</span>`;
+            }
+        }
+
+        function handleFileUpload(input) {
+            const file = input.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) { // 2MB Check
+                    alert("Image is too large. Please select an image under 2MB for faster loading.");
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const base64 = e.target.result;
+                    document.getElementById('profPicUrl').value = base64;
+                    updateAvatarPreview(base64);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateAvatarPreview(url) {
+            setAvatarDisplay(url, user.name[0], 'previewAvatar', 'previewInitials');
+            // Highlight matching avatar option if any
+            document.querySelectorAll('.avatar-option').forEach(opt => {
+                if (opt.querySelector('img').src === url) opt.classList.add('active');
+                else opt.classList.remove('active');
+            });
+        }
+
+        function initAvatars() {
+            const grid = document.getElementById('avatarGrid');
+            AVATARS.forEach(url => {
+                const opt = document.createElement('div');
+                opt.className = 'avatar-option';
+                if (user.profilePic === url) opt.classList.add('active');
+                opt.innerHTML = `<img src="${url}">`;
+                opt.onclick = () => {
+                    document.getElementById('profPicUrl').value = url;
+                    updateAvatarPreview(url);
+                };
+                grid.appendChild(opt);
+            });
+        }
+
+        if (user.verified) {
+            document.getElementById('verificationBadge').style.display = 'flex';
+        }
+
+        document.getElementById('profileNameSide').textContent = user.name;
+        document.getElementById('profileEmailSide').textContent = user.email;
+        document.getElementById('profPicUrl').value = user.profilePic || '';
+        document.getElementById('tfaToggle').checked = user.twoFactorEnabled || false;
+        initAvatars();
+
+        // Fill Form
+        document.getElementById('profName').value = user.name;
+        document.getElementById('profEmail').value = user.email;
+        document.getElementById('profPhone').value = user.phone || '';
+        document.getElementById('profAge').value = user.age || '';
+        document.getElementById('profGender').value = user.gender || 'male';
+        document.getElementById('profHomeGov').value = user.homeGov || 'cairo';
+
+        // Render Uploaded Docs
+        function renderDocs() {
+            const list = document.getElementById('uploadedDocsList');
+            list.innerHTML = '';
+            const docs = user.documents || [];
+            if (docs.length === 0) {
+                list.innerHTML = '<p style="font-size: 12px; color: gray; font-style: italic;">No documents uploaded yet.</p>';
+            }
+            docs.forEach((doc, i) => {
+                const item = document.createElement('div');
+                item.style = 'display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #f1f5f9; border-radius: 8px; font-size: 12px;';
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="material-icons-round" style="color: #64748b; font-size: 18px;">description</i>
+                        <span>${doc.name}</span>
+                    </div>
+                    <span style="color: #059669; font-weight: 700;">Uploaded</span>
+                `;
+                list.appendChild(item);
+            });
+        }
+        renderDocs();
+
+        // Handle Document Upload simulation
+        document.getElementById('profileDocs').addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files.length > 0) {
+                const existingDocs = user.documents || [];
+                for (let f of files) {
+                    existingDocs.push({ name: f.name, date: new Date().toISOString() });
+                }
+                user.documents = existingDocs;
+                // Simulate verification if more than 2 docs
+                if (existingDocs.length >= 2) user.verified = true;
+                db.updateUser(user.email, { documents: existingDocs, verified: user.verified });
+                renderDocs();
+                if (user.verified) document.getElementById('verificationBadge').style.display = 'flex';
+                alert("Documents uploaded! Initializing verification...");
+            }
+        });
+
+        // Load Role Specifics
+        const roleContainer = document.getElementById('roleSpecificContainer');
+        if (user.role === 'student') {
+            roleContainer.innerHTML = `
+                <div class="row-grid">
+                    <div class="form-group">
+                        <label>University</label>
+                        <input type="text" id="profUniv" value="${user.university || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Purpose</label>
+                        <input type="text" id="profPurpose" value="${user.purpose || ''}">
+                    </div>
+                </div>
+            `;
+        } else if (user.role === 'landlord') {
+            roleContainer.innerHTML = `
+                <div class="row-grid">
+                    <div class="form-group">
+                        <label>Property Address</label>
+                        <input type="text" id="profAddress" value="${user.address || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>District</label>
+                        <input type="text" id="profDistrict" value="${user.district || ''}">
+                    </div>
+                </div>
+            `;
+        }
+
+        // Handle Submit
+        document.getElementById('profileUpdateForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const updatedData = {
+                name: document.getElementById('profName').value,
+                phone: document.getElementById('profPhone').value,
+                age: parseInt(document.getElementById('profAge').value),
+                gender: document.getElementById('profGender').value,
+                homeGov: document.getElementById('profHomeGov').value,
+                profilePic: document.getElementById('profPicUrl').value,
+                twoFactorEnabled: document.getElementById('tfaToggle').checked
+            };
+
+            const newPass = document.getElementById('profPass').value;
+            if (newPass) updatedData.password = newPass;
+
+            if (user.role === 'student') {
+                updatedData.university = document.getElementById('profUniv').value;
+                updatedData.purpose = document.getElementById('profPurpose').value;
+            } else if (user.role === 'landlord') {
+                updatedData.address = document.getElementById('profAddress').value;
+                updatedData.district = document.getElementById('profDistrict').value;
+            }
+
+            const res = db.updateUser(user.email, updatedData);
+            if (res.success) {
+                alert("Profile updated successfully!");
+                window.location.reload();
+            } else {
+                alert(res.error);
+            }
+        });
+    </script>
+</body>
+
+</html>
